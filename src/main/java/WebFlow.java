@@ -60,7 +60,7 @@ public class WebFlow {
         }
         Runtime rut = Runtime.getRuntime();
         try{
-            Process p = rut.exec(new String[]{"Rscript","C:/Users/lehar.j/Desktop/Media.net/trends2.r"});
+            Process p = rut.exec(new String[]{"Rscript","trends2.r"});
             p.waitFor();
             System.out.println("Hello");
         }catch(Exception e){
