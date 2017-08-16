@@ -1,0 +1,11 @@
+.temp {
+  padding-top:8%;
+}
+
+select{
+  height:50px;
+  width:80%;
+  margin-right:15px;
+  border-radius:10px;
+  border:1px solid #AAAAAA;
+}
