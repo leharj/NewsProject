@@ -21,6 +21,7 @@ public class WorkerThread implements Runnable {
             DocumentBuilder builder = inputFactory.newDocumentBuilder();
             Document document = builder.parse(link);
             NodeList nodes = document.getElementsByTagName("title");
+            System.out.println(link+"  "+nodes.getLength());
             for(int i=0;i<nodes.getLength();i++){
                 Element element = (Element)nodes.item(i);
                 if(element.getParentNode().getNodeName().equals("item")){

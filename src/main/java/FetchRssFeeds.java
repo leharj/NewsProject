@@ -48,6 +48,9 @@ public class FetchRssFeeds {
         String sify = "http://www.sify.com/rss2/news/article/category/";
         String oneIndia = "http://www.oneindia.com/rss/news-";
         String allIndia = "http://www.allindianewspapers.com/Feeds/";
+        String businessStandard = "http://www.business-standard.com/rss/";
+        String et = "http://economictimes.indiatimes.com/";
+        String cnbc = "https://www.cnbc.com/id/";
         switch (i){
             case 0:
                 toi = toi+"topstories.cms";
@@ -103,13 +106,25 @@ public class FetchRssFeeds {
                 ht = ht+"business/rssfeed.xml";
                 allIndia = allIndia+"business.xml";
                 indiaToday = indiaToday+"34";
-                zee = zee+"business-news.xml";
+                zee = zee + "business-news.xml";
                 oneIndia = oneIndia+"business-fb.xml";
                 deccan = deccan+"business.rss";
                 news18 = news18+"business.xml";
                 rediff = rediff+"moneyrss.xml";
+                String businessStandard0 = businessStandard + "companies-101.rss";
+                String businessStandard1 = businessStandard + "management-107.rss";
+                String businessStandard2 = businessStandard + "economy-policy-102.rss";
+                String businessStandard3 = businessStandard + "finance-103.rss";
+                String businessStandard4 = businessStandard + "markets-106.rss";
+                String businessStandard5 = businessStandard + "home_page_top_stories.rss";
+                String et1 = et + "markets/rssfeeds/1977021501.cms";
+                String et2 = et + "industry/rssfeeds/13352306.cms";
+                String et3 = et + "small-biz/rssfeeds/5575607.cms";
+                String et4 = et + "wealth/rssfeeds/837555174.cms";
+                String cnbc1 = cnbc + "20910258/device/rss/rss.html";
+                String cnbc2 = cnbc + "10001147/device/rss/rss.html";
                 telegraph = telegraph+"9";
-                links.addAll(Arrays.asList(new String[]{toi,hindu,oneIndia,allIndia,rediff,news18,google,hindu1,hindu2,hindu3,ht,indiaToday,zee,deccan,telegraph}));
+                links.addAll(Arrays.asList(new String[]{toi,hindu,oneIndia,allIndia,cnbc1, cnbc2, et1,et2,et3,et4,businessStandard0,businessStandard1,businessStandard2,businessStandard3,businessStandard4,businessStandard5,rediff,news18,google,hindu1,hindu2,hindu3,ht,indiaToday,zee,deccan,telegraph}));
                 break;
             case 4:
                 toi = toi+"/5880659.cms";
@@ -153,7 +168,7 @@ public class FetchRssFeeds {
                 zee = zee+"sports-news.xml";
                 deccan = deccan+"sports.rss";
                 oneIndia = oneIndia+"sports-fb.xml";
-                rediff1 = rediff+"cricketrss.xml";
+                //rediff1 = rediff+"cricketrss.xml";
                 rediff = rediff+"sportsrss.xml";
                 google = google+"/headlines/section/topic/SPORTS.en_in/Sport";
                 indianExpress = indianExpress+"sports/feed";
@@ -163,7 +178,7 @@ public class FetchRssFeeds {
                 news181 = news18+"cricketnext.xml";
                 news18 = news18+"sports.xml";
                 links.addAll(Arrays.asList
-                        (new String[]{toi,hindu,ht,news181,news18,indiaToday,allIndia,oneIndia,rediff,rediff1,google,zee,deccan,indianExpress,indianExpress1,indianExpress2,telegraph}));
+                        (new String[]{toi,hindu,ht,news181,news18,indiaToday,allIndia,oneIndia,rediff,google,zee,deccan,indianExpress,indianExpress1,indianExpress2,telegraph}));
                 break;
         }
     }

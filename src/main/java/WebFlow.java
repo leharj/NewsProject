@@ -52,14 +52,14 @@ public class WebFlow {
         }catch (IOException e){
             e.printStackTrace();
         }
-        Runtime rut = Runtime.getRuntime();
-        try{
-            Process p = rut.exec(new String[]{"Rscript","trends2.r"});
-            p.waitFor();
-            System.out.println("Hello");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+//        Runtime rut = Runtime.getRuntime();
+//        try{
+//            Process p = rut.exec(new String[]{"Rscript","trends2.r"});
+//            p.waitFor();
+//            System.out.println("Hello");
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
         sb.append(new FetchTrends().getTrends(i));
         sb.append("\n</body>\n</html>");
         return sb.toString();
