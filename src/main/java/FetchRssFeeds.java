@@ -10,8 +10,10 @@ import java.util.concurrent.Executors;
 public class FetchRssFeeds {
 
     Vector<String> vector;
+    Vector<String> trends;
     public FetchRssFeeds(){
         vector = new Vector<String>();
+        trends = new Vector<String>();
     }
 
     public void fetchRSS(int i) throws IOException{
@@ -19,7 +21,7 @@ public class FetchRssFeeds {
         mapLinks(links,i);
         ExecutorService executor = Executors.newFixedThreadPool(8);
         for(String link:links){
-            Runnable worker = new WorkerThread(link,vector);
+            Runnable worker = new WorkerThread(link,vector,trends);
             executor.execute(worker);
         }
         executor.shutdown();
@@ -30,6 +32,12 @@ public class FetchRssFeeds {
             writer.write("\n");
         }
         writer.close();
+        FileWriter trendsWriter = new FileWriter("newsTrends.txt");
+        for(String news:trends) {
+            trendsWriter.write(news);
+            trendsWriter.write("\n");
+        }
+        trendsWriter.close();
     }
 
     public void mapLinks(ArrayList<String> links,int i){
@@ -168,7 +176,6 @@ public class FetchRssFeeds {
                 zee = zee+"sports-news.xml";
                 deccan = deccan+"sports.rss";
                 oneIndia = oneIndia+"sports-fb.xml";
-                //rediff1 = rediff+"cricketrss.xml";
                 rediff = rediff+"sportsrss.xml";
                 google = google+"/headlines/section/topic/SPORTS.en_in/Sport";
                 indianExpress = indianExpress+"sports/feed";
