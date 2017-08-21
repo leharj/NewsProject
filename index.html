@@ -1,0 +1,109 @@
+<html>
+<head>
+<title>Welcome</title> <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+  <div class="container-fluid bg-1 text-center">
+    <img src="trends.png" class="img-circle" alt="Trends" width="350" height="350">
+      <div class="container">
+        <form class="temp">
+            <label for="sel1">Select :</label>
+            <select id="sel1" onchange = " location=this.value;">
+              <option value="0"selected="true">General</option>
+              <option value="1">National</option>
+              <option value="2">World</option>
+              <option value="3">Business</option>
+              <option value="4">Technology</option>
+              <option value="5">Entertainment</option>
+              <option value="6">Sports</option>
+            </select>
+          </form>
+      </div>
+  </div>
+  
+  <!-- <div class="page-header"></div>
+<div id = "navbar" class="container col-md-3">
+<ul class="list-group abc">
+  <li class="list-group-item abc"><a href="#north korea">north korea</a></li>
+  <li class="list-group-item abc"><a href="#north korea">singh</a></li>
+  <li class="list-group-item abc"><a href="#north korea">secret</a></li>
+</ul>
+</div>
+
+<div id = "newsBar" class="container col-md-9">
+<ul class="list-group abc">
+  <li class="list-group-item abc">north korea</li>
+  <li class="list-group-item abc">singh</li>
+  <li class="list-group-item abc">secret</li>
+</ul>
+</div> -->
+<br>
+<br>
+<div class = "container col-md-6">
+<button class="accordion">Section 1</button>
+<div class="panel">
+  <ul class="list-group abc">
+    <li class="list-group-item abc">Our Project is Done </li>
+    <li class="list-group-item abc">I don't think so </li>
+    <li class="list-group-item abc">It will be done</li>
+  </ul>
+</div>
+
+<button class="accordion">Section 2</button>
+<div class="panel">
+  <ul class="list-group abc">
+    <li class="list-group-item abc">Our Project is Done </li>
+    <li class="list-group-item abc">I don't think so </li>
+    <li class="list-group-item abc">It will be done</li>
+  </ul>
+</div>
+</div>
+
+<div class = "container col-md-6">
+<button class="accordion">Section 1</button>
+<div class="panel">
+  <ul class="list-group abc">
+    <li class="list-group-item abc">Our Project is Done </li>
+    <li class="list-group-item abc">I don't think so </li>
+    <li class="list-group-item abc">It will be done</li>
+  </ul>
+</div>
+
+<button class="accordion">Section 2</button>
+<div class="panel">
+  <ul class="list-group abc">
+    <li class="list-group-item abc">Our Project is Done </li>
+    <li class="list-group-item abc">I don't think so </li>
+    <li class="list-group-item abc">It will be done</li>
+  </ul>
+</div>
+</div>
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].onclick = function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight){
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
