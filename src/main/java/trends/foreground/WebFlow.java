@@ -1,6 +1,8 @@
+package trends.foreground;
+
+import trends.Utilities.FetchRssFeeds;
 import spark.Spark;
 
-import java.io.IOException;
 import static spark.Spark.get;
 
 public class WebFlow {
@@ -31,9 +33,11 @@ public class WebFlow {
                 "</head>\n" +
                 "\n" +
                 "<body>\n" +
+                "<div class=\"container-fluid bg-1 text-center\">\n"+
+                "<img src=\"trends.png\" class=\"img-circle\" alt=\"Trends\" width=\"350\" height=\"350\">\n"+
                 "  <div class=\"container\">\n" +
                 "  <form class=\"temp\">\n" +
-                "      <label for=\"sel1\">Select list (select one):</label>\n" +
+                "      <label for=\"sel1\" style=\"color:white\">Select list (select one):</label>\n" +
                 "      <select id=\"sel1\" onchange = \" location=this.value;\">\n" +
                 "        <option value=\"0\""+(i==0?"selected=\"true\"":"")+">General</option>\n" +
                 "        <option value=\"1\""+(i==1?"selected=\"true\"":"")+">National</option>\n" +
@@ -45,22 +49,39 @@ public class WebFlow {
                 "      </select>\n" +
                 "    </form>\n" +
                 "  </div>\n" +
-                "  <div class=\"page-header\"></div>\n";
+                "</div>\n" +
+                "<br>\n"+
+                "<br>\n";
         StringBuilder sb = new StringBuilder(s);
         try {
             new FetchRssFeeds().fetchRSS(i);
-        }catch (IOException e){
+        }catch (Exception e){
             e.printStackTrace();
         }
-        Runtime rut = Runtime.getRuntime();
-        try{
-            Process p = rut.exec(new String[]{"Rscript","trends2.r"});
-            p.waitFor();
-            System.out.println("Hello");
-        }catch(Exception e){
+
+        try {
+            sb.append(new FetchTrends().getTrends());
+        }catch (Exception e){
             e.printStackTrace();
         }
-        sb.append(new FetchTrends().getTrends(i));
+
+        String str = "<script>\n" +
+                "var acc = document.getElementsByClassName(\"accordion\");\n" +
+                "var i;\n" +
+                "for (i = 0; i < acc.length; i++) {\n" +
+                "  acc[i].onclick = function() {\n" +
+                "    this.classList.toggle(\"active\");\n" +
+                "    var panel = this.nextElementSibling;\n" +
+                "    if (panel.style.maxHeight){\n" +
+                "      panel.style.maxHeight = null;\n" +
+                "    } else {\n" +
+                "      panel.style.maxHeight = panel.scrollHeight + \"px\";\n" +
+                "    } \n" +
+                "  }\n" +
+                "}\n" +
+                "</script>";
+
+        sb.append(str);
         sb.append("\n</body>\n</html>");
         return sb.toString();
     }
