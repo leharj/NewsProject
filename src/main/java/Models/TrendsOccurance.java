@@ -1,4 +1,4 @@
-package trends.Models;
+package Models;
 
 public class TrendsOccurance implements Comparable{
 

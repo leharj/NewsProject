@@ -1,6 +1,6 @@
-package trends.Utilities;
+package Utilities;
 
-import trends.Models.NewsItem;
+import Models.NewsItem;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -40,6 +40,7 @@ public class FetchRssFeeds {
     }
 
     public void fetchRSS(int i) throws Exception{
+        String table[] = {"general","political","world","business","technology","entertainment","sports"};
         ArrayList<String> links = new ArrayList<String>();
         mapLinks(links,i);
         ExecutorService executor = Executors.newFixedThreadPool(8);
@@ -49,7 +50,7 @@ public class FetchRssFeeds {
         }
         executor.shutdown();
         while(!executor.isTerminated());
-        DatabaseHandler.writeToNews(news);
+        DatabaseHandler.writeToNews(news,table[i]);
     }
 
     private void mapLinks(ArrayList<String> links, int i){

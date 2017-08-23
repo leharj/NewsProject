@@ -1,6 +1,6 @@
-package trends.Utilities;
+package Utilities;
 
-import trends.Models.NewsItem;
+import Models.NewsItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

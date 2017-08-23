@@ -1,8 +1,8 @@
 package trends.foreground;
 
-import trends.Models.NewsItem;
-import trends.Models.TrendsOccurance;
-import trends.Utilities.DatabaseHandler;
+import Models.NewsItem;
+import Models.TrendsOccurance;
+import Utilities.DatabaseHandler;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -10,7 +10,8 @@ import java.util.regex.Pattern;
 
 public class FetchTrends {
 
-    public String getTrends() throws Exception{
+    public String getTrends(int target) throws Exception{
+        String table[] = {"general","political","world","business","technology","entertainment","sports"};
         ArrayList<String> trends = new ArrayList<String>();
         ArrayList<NewsItem> news = new ArrayList<NewsItem>();
         ArrayList<TrendsOccurance> collection = new ArrayList<TrendsOccurance>();
@@ -18,7 +19,7 @@ public class FetchTrends {
         Calendar today = Calendar.getInstance();
         Date date = today.getTime();
         trends = DatabaseHandler.getTrends();
-        news = DatabaseHandler.getNews();
+        news = DatabaseHandler.getNews(table[target]);
         for(String trend:trends){
             for(NewsItem newsItem:news){
                 boolean flag = Pattern.compile(Pattern.quote(trend),Pattern.CASE_INSENSITIVE).matcher(newsItem.getTitle()).find();
@@ -50,6 +51,12 @@ public class FetchTrends {
                 collection.add(map.get(trend));
         }
         Collections.sort(collection);
+
+        for(TrendsOccurance occurance:collection){
+            if(occurance.getSum()<2)
+                collection.remove(occurance);
+        }
+
         ArrayList<String> titleNews;
         StringBuilder sb = new StringBuilder();
         String str = "<div class=\"container col-md-6\">\n";
@@ -57,7 +64,7 @@ public class FetchTrends {
 
         for(int i=0;i<(collection.size()+1)/2;i++) {
             TrendsOccurance occurance = collection.get(2 * i);
-            titleNews = DatabaseHandler.getNewsForTitle(occurance.getTrend());
+            titleNews = DatabaseHandler.getNewsForTitle(occurance.getTrend(),table[target]);
             listBuilder(sb, occurance, titleNews);
         }
         sb.append("</div>\n");
@@ -66,7 +73,7 @@ public class FetchTrends {
 
         for(int i=0;i<collection.size()/2;i++){
             TrendsOccurance occurance = collection.get(2*i+1);
-            titleNews = DatabaseHandler.getNewsForTitle(occurance.getTrend());
+            titleNews = DatabaseHandler.getNewsForTitle(occurance.getTrend(),table[target]);
             listBuilder(sb, occurance, titleNews);
         }
         sb.append("</div>\n");
@@ -76,16 +83,14 @@ public class FetchTrends {
 
     private void listBuilder(StringBuilder sb, TrendsOccurance occurance, ArrayList<String> titleNews) {
         String str;
-        if(titleNews.size()>=2) {
-            str = "<button class = \"accordion\">" + occurance.getTrend() + "</button>\n"
-                    + "<div class=\"panel\">\n"
-                    + "<ul class=\"list-group\">\n";
-            sb.append(str);
+        str = "<button class = \"accordion\">" + occurance.getTrend() + "</button>\n"
+                + "<div class=\"panel\">\n"
+                + "<ul class=\"list-group\">\n";
+        sb.append(str);
 
-            for (String relatedNews : titleNews)
-                sb.append("     <li class=\"list-group-item\">" + relatedNews + "</li>\n");
-            sb.append(" </ul>\n");
-            sb.append("</div>\n");
-        }
+        for (String relatedNews : titleNews)
+            sb.append("     <li class=\"list-group-item\">" + relatedNews + "</li>\n");
+        sb.append(" </ul>\n");
+        sb.append("</div>\n");
     }
 }

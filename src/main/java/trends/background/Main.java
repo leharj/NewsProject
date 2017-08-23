@@ -1,6 +1,6 @@
 package trends.background;
 
-import trends.Utilities.FetchRssFeeds;
+import Utilities.FetchRssFeeds;
 
 import java.io.File;
 
@@ -14,6 +14,8 @@ public class Main {
                 new FetchRssFeeds().fetchAllRSS(i);
                 Runtime rut = Runtime.getRuntime();
                 Process p = rut.exec(new String[]{"Rscript","trends2.r"});
+                p.waitFor();
+                p = rut.exec(new String[]{"Rscript","trends2.r"});
                 p.waitFor();
                 p = rut.exec(new String[]{"Rscript","trends2.r"});
                 p.waitFor();

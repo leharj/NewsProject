@@ -1,4 +1,4 @@
-package trends.Models;
+package Models;
 
 import java.util.Date;
 

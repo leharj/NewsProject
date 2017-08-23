@@ -1,6 +1,6 @@
 package trends.foreground;
 
-import trends.Utilities.FetchRssFeeds;
+import Utilities.FetchRssFeeds;
 import spark.Spark;
 
 import static spark.Spark.get;
@@ -60,7 +60,7 @@ public class WebFlow {
         }
 
         try {
-            sb.append(new FetchTrends().getTrends());
+            sb.append(new FetchTrends().getTrends(i));
         }catch (Exception e){
             e.printStackTrace();
         }

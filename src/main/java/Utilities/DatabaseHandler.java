@@ -1,7 +1,7 @@
-package trends.Utilities;
+package Utilities;
 
-import trends.Models.NewsItem;
-import trends.Models.TrendsOccurance;
+import Models.NewsItem;
+import Models.TrendsOccurance;
 
 import java.sql.*;
 import java.util.*;
@@ -24,13 +24,13 @@ public class DatabaseHandler {
         con.close();
     }
 
-    public static void writeToNews(Vector<NewsItem> news) throws Exception{
+    public static void writeToNews(Vector<NewsItem> news,String tableName) throws Exception{
         connectDb();
         Statement statement = con.createStatement();
-        statement.executeUpdate("DELETE FROM news");
+        statement.executeUpdate("DELETE FROM "+tableName);
         for(NewsItem item:news){
             Timestamp timestamp = getTimeStamp(item.getTimeStamp());
-            statement.executeUpdate("INSERT INTO news VALUES('" + item.getTitle() + "','" + timestamp + "')");
+            statement.executeUpdate("INSERT INTO "+tableName+" VALUES('" + item.getTitle() + "','" + timestamp + "')");
         }
         con.close();
     }
@@ -50,10 +50,10 @@ public class DatabaseHandler {
         return  trends;
     }
 
-    public static ArrayList<NewsItem> getNews() throws Exception{
+    public static ArrayList<NewsItem> getNews(String tableName) throws Exception{
         connectDb();
         Statement statement = con.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM news");
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM "+tableName);
         ArrayList<NewsItem> news = new ArrayList<NewsItem>();
         while(resultSet.next()){
             String title = resultSet.getString(1);
@@ -78,13 +78,21 @@ public class DatabaseHandler {
         con.close();
     }
 
-    public static ArrayList<String> getNewsForTitle(String trend) throws Exception{
+    public static ArrayList<String> getNewsForTitle(String trend,String tableName) throws Exception{
         connectDb();
         Statement statement = con.createStatement();
-        ResultSet set = statement.executeQuery("SELECT DISTINCT title FROM news WHERE title LIKE \"%"+trend+"%\"");
-        ArrayList<String> titles = new ArrayList<String>();
+        ResultSet set = statement.executeQuery("SELECT DISTINCT title FROM "+tableName+" WHERE title LIKE \"%"+trend+"%\"");
+        ArrayList<String> titles = new ArrayList<>();
         while(set.next())
             titles.add(set.getString(1));
         return titles;
+    }
+
+    public static void writeToNational(HashSet<String> keywords) throws Exception{
+        connectDb();;
+        Statement statement = con.createStatement();
+        statement.executeUpdate("DELETE FROM national");
+        for(String keyWord:keywords)
+            statement.executeUpdate("INSERT INTO national VALUES ('"+keyWord+"')");
     }
 }
