@@ -89,10 +89,21 @@ public class DatabaseHandler {
     }
 
     public static void writeToNational(HashSet<String> keywords) throws Exception{
-        connectDb();;
+        connectDb();
         Statement statement = con.createStatement();
         statement.executeUpdate("DELETE FROM national");
         for(String keyWord:keywords)
             statement.executeUpdate("INSERT INTO national VALUES ('"+keyWord+"')");
+    }
+
+    public static void writeNationalNews(Vector<String> news) throws Exception{
+        connectDb();
+        Statement statement = con.createStatement();
+        statement.executeUpdate("DELETE FROM nationalnews");
+        for(String title:news) {
+            title = title.replace("'","");
+            title.replace("’","");
+            statement.executeUpdate("INSERT INTO nationalnews VALUES ('" + title + "')");
+        }
     }
 }

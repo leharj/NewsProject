@@ -4,4 +4,4 @@ target
 *.class
 .Rhistory
 *.txt
-
+.Rdata

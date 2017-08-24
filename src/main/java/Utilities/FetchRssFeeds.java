@@ -20,9 +20,11 @@ public class FetchRssFeeds {
         news = new Vector<NewsItem>();
     }
 
-    public void fetchAllRSS(int i) throws IOException{
+    public Vector<String> fetchAllRSS(int i) throws Exception{
+        int k = i;
+        if(i==7) k =1;
         ArrayList<String> links = new ArrayList<String>();
-        mapAllLinks(links,i);
+        mapAllLinks(links,k);
         ExecutorService executor = Executors.newFixedThreadPool(8);
         for(String link:links){
             Runnable worker = new WorkerThread(link,vector);
@@ -37,6 +39,11 @@ public class FetchRssFeeds {
             writer.write("\n");
         }
         writer.close();
+        if(i==7){
+            DatabaseHandler.writeNationalNews(vector);
+            return  vector;
+        }
+        return null;
     }
 
     public void fetchRSS(int i) throws Exception{

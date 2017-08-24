@@ -4,6 +4,7 @@ library(akmeans)
 filename <- "news.txt"
 con <- file(filename,"r")
 line <- readLines(con)
+line<-unique(line)
 len<-length(line)
 fact = 8
 if(len>700)
@@ -13,6 +14,11 @@ data<-tm_map(data,removePunctuation)
 data<-tm_map(data,removeWords,stopwords("english"))
 data<-tm_map(data,stripWhitespace)
 dtm<-DocumentTermMatrix(data)
+mat<-as.matrix(dtm)
+a<-colSums(mat);
+a<-sort(a,decreasing = TRUE)
+df<-data.frame(value = 1/a);
+write.table(df,file="weights.txt",sep=" ",row.names = TRUE,col.names = FALSE,quote = FALSE)
 dtm<-weightTfIdf(dtm)
 mat<-as.matrix(dtm)
 results<-norm.sim.ksc(mat,length(line)/10,iter.max = 10)
@@ -47,6 +53,9 @@ for(i in y){
     a<-colnames(m)[colSums(m)>max(len/4,2)]
     trends<-c(trends,a)
     m<-as.matrix(DocumentTermMatrix(corpus,control = list(tokenize=TrigramTokenizer)))
+    a<-colnames(m)[colSums(m)>2]
+    trends<-c(trends,a)
+    m<-as.matrix(DocumentTermMatrix(corpus,control = list(tokenize = QuadgramTokenizer)))
     a<-colnames(m)[colSums(m)>2]
     trends<-c(trends,a)
   }
