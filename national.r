@@ -1,7 +1,7 @@
 library(tm)
 library(RWeka)
 library(akmeans)
-filename <- "news.txt"
+filename <- "news1.txt"
 con <- file(filename,"r")
 line <- readLines(con)
 line<-unique(line)

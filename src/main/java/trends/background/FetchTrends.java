@@ -1,4 +1,4 @@
-package trends.foreground;
+package trends.background;
 
 import Models.NewsItem;
 import Models.TrendsOccurance;
@@ -65,7 +65,7 @@ public class FetchTrends {
         for(int i=0;i<(collection.size()+1)/2;i++) {
             TrendsOccurance occurance = collection.get(2 * i);
             titleNews = DatabaseHandler.getNewsForTitle(occurance.getTrend(),table[target]);
-            listBuilder(sb, occurance, titleNews);
+            listBuilder(sb, occurance.getTrend(), titleNews);
         }
         sb.append("</div>\n");
         str = "<div class=\"container col-md-6\">\n";
@@ -74,16 +74,16 @@ public class FetchTrends {
         for(int i=0;i<collection.size()/2;i++){
             TrendsOccurance occurance = collection.get(2*i+1);
             titleNews = DatabaseHandler.getNewsForTitle(occurance.getTrend(),table[target]);
-            listBuilder(sb, occurance, titleNews);
+            listBuilder(sb, occurance.getTrend(), titleNews);
         }
         sb.append("</div>\n");
 
         return sb.toString();
     }
 
-    private void listBuilder(StringBuilder sb, TrendsOccurance occurance, ArrayList<String> titleNews) {
+    private void listBuilder(StringBuilder sb, String occurance, ArrayList<String> titleNews) {
         String str;
-        str = "<button class = \"accordion\">" + occurance.getTrend() + "</button>\n"
+        str = "<button class = \"accordion\">" + occurance + "</button>\n"
                 + "<div class=\"panel\">\n"
                 + "<ul class=\"list-group\">\n";
         sb.append(str);

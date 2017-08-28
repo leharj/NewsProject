@@ -1,5 +1,6 @@
-package national;
+package national.background;
 
+import Models.TrendsOccurance;
 import Utilities.DatabaseHandler;
 import Utilities.FetchRssFeeds;
 
@@ -22,27 +23,23 @@ public class FetchNews {
         verbSet = new HashSet<>(Arrays.asList(commonVerbs));
     }
 
-    public static void main(String args[]){
-        try {
-            FetchNews fetchNews = new FetchNews();
-            fetchNews.fetchNews();
-            System.out.println("LEHAR");
-            Runtime rut = Runtime.getRuntime();
-            Process p = rut.exec(new String[]{"Rscript","national.r"});
-            p.waitFor();
-            System.out.println("JAIN");
-            fetchNews.preprocessKeywords();
-            fetchNews.clubKeywords();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public String nationalNews() throws Exception{
+        fetchNews();
+        System.out.println("LEHAR");
+        Runtime rut = Runtime.getRuntime();
+        Process p = rut.exec(new String[]{"Rscript","national.r"});
+        p.waitFor();
+        System.out.println("JAIN");
+        preprocessKeywords();
+        String s = getClubNews();
+        return s;
     }
 
-    public void fetchNews() throws Exception{
-        news = new FetchRssFeeds().fetchAllRSS(7);
+    private void fetchNews() throws Exception{
+        news = new FetchRssFeeds().fetchAllRSS(7,"news1.txt");
     }
 
-    public void preprocessKeywords() throws Exception{
+    private void preprocessKeywords() throws Exception{
         trendSet = new HashSet<>();
         HashSet<String> doubleWordSet = new HashSet<>();
         HashSet<String> tripleWordSet = new HashSet<>();
@@ -147,8 +144,7 @@ public class FetchNews {
         return true;
     }
 
-    private void clubKeywords() throws Exception{
-
+    private String getClubNews() throws Exception{
         weights = new HashMap<>();
         FileReader fr = new FileReader("weights.txt");
         BufferedReader reader = new BufferedReader(fr);
@@ -172,25 +168,89 @@ public class FetchNews {
                 }
             }
             if(i>=2){
-                if(map.get(sb.toString())==null){
+                String s = sb.toString();
+                s = s.substring(0,s.length()-2);
+                if(map.get(s)==null){
                     ArrayList<String> titles = new ArrayList<>();
                     titles.add(title);
-                    map.put(sb.toString(),titles);
+                    map.put(s.toString(),titles);
                 }
                 else{
-                    ArrayList<String> titles = map.get(sb.toString());
+                    ArrayList<String> titles = map.get(s);
                     titles.add(title);
-                    map.put(sb.toString(),titles);
+                    map.put(s,titles);
                 }
             }
         }
-        for(String s: map.keySet()) {
-            System.out.println(s);
-            for(String title:map.get(s))
-                System.out.println(title);
-            System.out.println();
-            System.out.println();
+
+        HashSet<String> oneNews = new HashSet<>();
+
+        for(String s:map.keySet()){
+            if(map.get(s).size()==1)
+                oneNews.add(s);
         }
+
+        HashMap<String,List<String>> addOns  = new HashMap<>();
+
+        for(String s:oneNews){
+            List<String> list = new ArrayList<>(map.keySet());
+            Iterator<String> iterator = list.iterator();
+
+            while(iterator.hasNext()){
+                String t = iterator.next();
+                List<String> intersections = completeIntersection(s,t);
+                if(intersections!=null){
+                    try {
+                        String newAdd = map.get(s).get(0);
+                        ArrayList<String> titles = map.get(t);
+                        titles.add(newAdd);
+                        map.put(t, titles);
+                        map.remove(s);
+                        if (addOns.get(t) == null)
+                            addOns.put(t, intersections);
+                        else {
+                            List<String> additions = addOns.get(t);
+                            additions.addAll(intersections);
+                            addOns.put(t, additions);
+                        }
+                        iterator.remove();
+                    }catch (Exception e){}
+                }
+            }
+        }
+
+        for(String s:addOns.keySet()){
+            List<String> additions = addOns.get(s);
+            ArrayList<String> list = map.get(s);
+            map.remove(s);
+            for(String addition:additions)
+                s = s+", "+addition;
+            map.put(s,list);
+        }
+
+        System.out.println(map.size());
+
+        StringBuilder sb = new StringBuilder("<div class=\"container col-md-6\">\n");
+
+        int size = map.size();
+        ArrayList<String> list = new ArrayList<>(map.keySet());
+
+        for(int i=0;i<(size+1)/2;i++){
+            ArrayList<String> articles = map.get(list.get(2*i));
+            listBuilder(sb,list.get(2*i),articles);
+        }
+
+        sb.append("</div>\n");
+        String str = "<div class=\"container col-md-6\">\n";
+        sb.append(str);
+
+        for(int i=0;i<size/2;i++){
+            ArrayList<String> articles = map.get(list.get(2*i+1));
+            listBuilder(sb,list.get(2*i+1),articles);
+        }
+
+        sb.append("</div>\n");
+        return sb.toString();
     }
 
     private boolean intersects(String a,String b){
@@ -211,5 +271,33 @@ public class FetchNews {
         else if(i>=2)
             if(weight>0.05) return true;
         return false;
+    }
+
+    private List<String> completeIntersection(String a,String b){
+        boolean x = true;
+        if(a.equals(b)) return null;
+        List<String> aList = Arrays.asList(a.split(", "));
+        List<String> bList = Arrays.asList(b.split(", "));
+        Set<String> aSet = new HashSet<>(aList);
+        for(String trend:bList) {
+            x = x && aSet.contains(trend);
+            if(x) aSet.remove(trend);
+        }
+        if(x) return new ArrayList<>(aSet);
+        return null;
+    }
+
+
+    private void listBuilder(StringBuilder sb, String occurance, ArrayList<String> titleNews) {
+        String str;
+        str = "<button class = \"accordion\">" + occurance + "</button>\n"
+                + "<div class=\"panel\">\n"
+                + "<ul class=\"list-group\">\n";
+        sb.append(str);
+
+        for (String relatedNews : titleNews)
+            sb.append("     <li class=\"list-group-item\">" + relatedNews + "</li>\n");
+        sb.append(" </ul>\n");
+        sb.append("</div>\n");
     }
 }

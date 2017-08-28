@@ -20,7 +20,11 @@ public class FetchRssFeeds {
         news = new Vector<NewsItem>();
     }
 
-    public Vector<String> fetchAllRSS(int i) throws Exception{
+    public void fetchAllRSS(int i) throws Exception{
+        fetchAllRSS(i,"news.txt");
+    }
+
+    public Vector<String> fetchAllRSS(int i,String file) throws Exception{
         int k = i;
         if(i==7) k =1;
         ArrayList<String> links = new ArrayList<String>();
@@ -32,17 +36,14 @@ public class FetchRssFeeds {
         }
         executor.shutdown();
         while(!executor.isTerminated()){}
-        File f = new File("news.txt");
+        File f = new File(file);
         FileWriter writer = new FileWriter(f);
         for(String news:vector){
             writer.write(news);
             writer.write("\n");
         }
         writer.close();
-        if(i==7){
-            DatabaseHandler.writeNationalNews(vector);
-            return  vector;
-        }
+        if(i==7) return vector;
         return null;
     }
 
