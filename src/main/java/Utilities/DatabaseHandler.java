@@ -1,11 +1,13 @@
 package Utilities;
 
+import Models.Article;
 import Models.NewsItem;
 import Models.TrendsOccurance;
 
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class DatabaseHandler {
     static Connection con;
@@ -63,6 +65,7 @@ public class DatabaseHandler {
             Date date = calendar.getTime();
             news.add(new NewsItem(title,date));
         }
+        con.close();
         return news;
     }
 
@@ -85,6 +88,7 @@ public class DatabaseHandler {
         ArrayList<String> titles = new ArrayList<>();
         while(set.next())
             titles.add(set.getString(1));
+        con.close();
         return titles;
     }
 
@@ -94,5 +98,44 @@ public class DatabaseHandler {
         statement.executeUpdate("DELETE FROM national");
         for(String keyWord:keywords)
             statement.executeUpdate("INSERT INTO national VALUES ('"+keyWord+"')");
+        con.close();
+    }
+
+    public synchronized static void writeArticle(Article article) throws Exception{
+        connectDb();
+        Statement statement = con.createStatement();
+        if(compareDate(article.getDate())) {
+        Timestamp ts = getTimeStamp(article.getDate());
+            statement.executeUpdate("INSERT INTO article VALUES ('" + article.getTitle() + "', '" + ts + "', '" + article.getContent()
+                    + "', '"+article.getLink()+"')");
+        }
+        con.close();
+    }
+
+    private static boolean compareDate(Date date){
+        long current = Calendar.getInstance().getTime().getTime();
+        long article = date.getTime();
+        long diff = current - article;
+        diff = TimeUnit.MILLISECONDS.toHours(diff);
+        return diff<6;
+    }
+
+    public static HashSet<Article> getArticles() throws Exception{
+        connectDb();
+        Statement statement = con.createStatement();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DATE,-2);
+        Date date = calendar.getTime();
+        Timestamp ts = getTimeStamp(date);
+        HashSet<Article> articles = new HashSet<>();
+        ResultSet rs = statement.executeQuery("SELECT * FROM article WHERE time > '"+ts+"'");
+        while(rs.next()){
+            Timestamp timestamp = rs.getTimestamp(2);
+            Date d = new Date(timestamp.getTime());
+            Article article = new Article(rs.getString(1),d,rs.getString(3),rs.getString(4));
+            articles.add(article);
+        }
+        return articles;
     }
 }

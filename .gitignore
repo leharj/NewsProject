@@ -5,3 +5,4 @@ target
 .Rhistory
 *.txt
 .Rdata
+.idea*

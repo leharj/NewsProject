@@ -29,6 +29,7 @@ public class FetchRssFeeds {
         if(i==7) k =1;
         ArrayList<String> links = new ArrayList<String>();
         mapAllLinks(links,k);
+        System.out.println("lkj");
         ExecutorService executor = Executors.newFixedThreadPool(8);
         for(String link:links){
             Runnable worker = new WorkerThread(link,vector);
