@@ -138,51 +138,54 @@ public class WebFlow {
         StringBuilder sb = new StringBuilder();
         sb.append("<script type=\"text/javascript\" src=\"https://canvasjs.com/assets/script/canvasjs.min.js\"></script>\n");
         sb.append("<script type=\"text/javascript\">\n");
+        String str = "function myfunction(str, val1, val2, val3, val4, val5, val6, val7, val8){\n" +
+                "          var chart = new CanvasJS.Chart(str,\n" +
+                "          {\n" +
+                "               title:{\n" +
+                "                    text: \"Trending Pattern\"\n" +
+                "               },\n" +
+                "               axisY:{\n" +
+                "                    gridThickness: 0,\n" +
+                "                    labelFontColor: \"White\"\n" +
+                "               },\n" +
+                "               axisX:{\n" +
+                "                    gridThickness: 0,\n" +
+                "                    labelFontColor: \"White\"\n" +
+                "               },\n" +
+                "               toolTip:{\n" +
+                "                    gridThickness: 0,\n" +
+                "                    enabled: false\n" +
+                "               },\n" +
+                "\n" +
+                "               data: [\n" +
+                "               {\n" +
+                "                  type: \"line\",\n" +
+                "               \n" +
+                "                  dataPoints: [\n" +
+                "                  { x: 1, y: val1},\n" +
+                "                  { x: 2, y: val2},\n" +
+                "                  { x: 3, y: val3},\n" +
+                "                  { x: 4, y: val4},\n" +
+                "                  { x: 5, y: val5},\n" +
+                "                  { x: 6, y: val6},\n" +
+                "                  { x: 7, y: val7},\n" +
+                "                  { x: 8, y: val8},\n" +
+                "                  ]\n" +
+                "                }\n" +
+                "                ]\n" +
+                "          });\n" +
+                "          chart.render();\n" +
+                "    }\n";
+        sb.append(str);
         for(int i=0;i<chartParams.size()/8;i++){
-            String str = "var chart"+(i+1)+" = new CanvasJS.Chart(\"chartContainer"+(i+1)+"\",\n" +
-                    "    {\n" +
-                    "     title:{\n" +
-                    "      text: \"Trending Pattern\"\n" +
-                    "     },\n" +
-                    "      axisY:{\n" +
-                    "        gridThickness: 0,\n" +
-                    "\tlabelFontColor: \"White\"\n" +
-                    "      },\n" +
-                    "      axisX:{\n" +
-                    "\tlabelFontColor: \"White\"\n" +
-                    "      },\n" +
-                    "\ttoolTip:{\n" +
-                    "       enabled: false\n" +
-                    "},\n"+
-                    "\n" +
-                    "      data: [\n" +
-                    "      {\n" +
-                    "        type: \"line\",\n" +
-                    "\t\n" +
-                    "        dataPoints: [\n" +
-                    "        { x: 1, y: "+chartParams.get(8*i+7)+"},\n" +
-                    "        { x: 2, y: "+chartParams.get(8*i+6)+"},\n" +
-                    "        { x: 3, y: "+chartParams.get(8*i+5)+"},\n" +
-                    "        { x: 4, y: "+chartParams.get(8*i+4)+"},\n" +
-                    "        { x: 5, y: "+chartParams.get(8*i+3)+"},\n" +
-                    "        { x: 6, y: "+chartParams.get(8*i+2)+"},\n" +
-                    "        { x: 7, y: "+chartParams.get(8*i+1)+"},\n" +
-                    "        { x: 8, y: "+chartParams.get(8*i)+"},\n" +
-                    "\n" +
-                    "        ]\n" +
-                    "      }\n" +
-                    "      ]\n" +
-                    "    });\n" +
-                    "\n" +
-                    "    chart"+(i+1)+".render();\n";
-            sb.append(str);
+            sb.append("myfunction(\"chartContainer"+(i+1)+"\","+chartParams.get(8*i+7)+","+chartParams.get(8*i+6)+","+chartParams.get(8*i+5)+","+chartParams.get(8*i+4)+","+chartParams.get(8*i+3)+","+chartParams.get(8*i+2)+","+chartParams.get(8*i+1)+","+chartParams.get(8*i)+")\n");
         }
         sb.append("</script>\n");
         sb.append("<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?sensor=false\"></script>\n");
         String script = "<script src=\"https://maps.googleapis.com/maps/api/js?key="+"AIzaSyCNEXqbcWu5PpxIguMDnOr4WL6NhtM8Wfs\"></script>\n";
         sb.append(script);
         sb.append("<script>\n");
-        String str = "var x;\nvar y;\n      function initMap(loc,id) {\n" +
+        String s = "var x;\nvar y;\n      function initMap(loc,id) {\n" +
         "         fun(this);\n"+
         "         var geocoder =  new google.maps.Geocoder();\n" +
         "         geocoder.geocode( { 'address': loc+', India'}, function(results, status) {\n" +
@@ -215,7 +218,7 @@ public class WebFlow {
                 "    } \n" +
                 "  }\n"+
         "</script>\n";
-        sb.append(str);
+        sb.append(s);
         return sb.toString();
     }
 }

@@ -380,9 +380,11 @@ public class FetchNews {
     private void listBuilder(StringBuilder sb,Map.Entry<String,NewsDisplay> mapEntry,int i) {
         String str;
         String location = mapEntry.getValue().getLocation();
-        str = "<button class = \"accordion\" onClick=\"initMap.call(this,'"+location+"','map"+(i+1)+"')\">" + mapEntry.getKey() + "</button>\n"
+        str = "<button class = \"accordion\" onClick=\"initMap.call(this,'"+location+"','map"+(i+1)+"')\"><p class=\"alignleft\"><em>"
+                + mapEntry.getKey() + "</em></p>" + "<p class = \" alignright \">" + location + "</p></button>\n"
                 + "<div class=\"panel\">\n"
                 + "<ul class=\"list-group\">\n";
+
         sb.append(str);
 
         for (String relatedNews : mapEntry.getValue().getRelatedNews())

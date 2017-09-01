@@ -39,7 +39,6 @@ button.accordion.active, button.accordion:hover {
 }
 
 button.accordion:after {
-    content: '\002B';
     color: #777;
     font-weight: bold;
     float: right;
@@ -47,7 +46,6 @@ button.accordion:after {
 }
 
 button.accordion.active:after {
-    content: "\2212";
 }
 
 div.panel {
@@ -64,4 +62,15 @@ div.topic{
 
 .canvasjs-chart-credit {
     display: none;
+}
+
+.alignleft {
+  float: left;
+  text-transform: capitalize;
+  color: purple;
+}
+.alignright {
+  float: right;
+  text-transform: capitalize;
+  color: brown;
 }
