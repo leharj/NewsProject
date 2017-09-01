@@ -9,12 +9,16 @@ import java.util.*;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static constants.PersonalConstants.DBNAME;
+import static constants.PersonalConstants.DBPASS;
+import static constants.PersonalConstants.DBUSER;
+
 public class DatabaseHandler {
     static Connection con;
     public static void connectDb() throws Exception{
 
         Class.forName("com.mysql.jdbc.Driver");
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/trends","root","password");
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+DBNAME,DBUSER,DBPASS);
 
     }
     public static void writeKeywords(Set<String> trendSet) throws Exception{
