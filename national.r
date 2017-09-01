@@ -5,6 +5,7 @@ filename <- "news1.txt"
 con <- file(filename,"r")
 line <- readLines(con)
 line<-unique(line)
+line <- gsub("'s","",line)
 len<-length(line)
 fact = 8
 if(len>700)
@@ -60,4 +61,4 @@ for(i in y){
     trends<-c(trends,a)
   }
 }
-write(trends,"trendsNational.txt",append = FALSE,sep="\n")
+write(trends,"trendsNational.txt",append = TRUE,sep="\n")

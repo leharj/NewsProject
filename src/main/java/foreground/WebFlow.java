@@ -71,7 +71,7 @@ public class WebFlow {
     private String getTopHtml(int i){
         String s = "<html>\n" +
                 "<head>\n" +
-                "<title>Welcome</title> <meta charset=\"utf-8\">\n" +
+                "<title>Whats Trending</title> <meta charset=\"utf-8\">\n" +
                 "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
                 "  <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">\n" +
                 "  <link rel=\"stylesheet\" href=\"style.css\">\n" +
@@ -97,7 +97,6 @@ public class WebFlow {
                 "  <form class=\"temp\">\n" +
                 "      <label for=\"sel1\" style=\"color:white\">Select list (select one):</label>\n" +
                 "      <select id=\"sel1\" onchange = \" location=this.value;\">\n" +
-                "        <option value=\"0\""+(i==0?"selected=\"true\"":"")+">General</option>\n" +
                 "        <option value=\"1\""+(i==1?"selected=\"true\"":"")+">National</option>\n" +
                 "        <option value=\"2\""+(i==2?"selected=\"true\"":"")+">World</option>\n" +
                 "        <option value=\"3\""+(i==3?"selected=\"true\"":"")+">Business</option>\n" +
@@ -135,6 +134,10 @@ public class WebFlow {
         sb.append("<script type=\"text/javascript\" src=\"https://canvasjs.com/assets/script/canvasjs.min.js\"></script>\n");
         sb.append("<script type=\"text/javascript\">\n");
         String str = "function myfunction(str, val1, val2, val3, val4, val5, val6, val7, val8){\n" +
+                "       if((val1+val2+val3+val4+val5+val6+val7+val8)==0){\n" +
+                "           document.getElementById(str).style.height='0px'\n" +
+                "           return;\n" +
+                "       }\n" +
                 "          var chart = new CanvasJS.Chart(str,\n" +
                 "          {\n" +
                 "               title:{\n" +
@@ -183,6 +186,9 @@ public class WebFlow {
         sb.append("<script>\n");
         String s = "var x;\nvar y;\n      function initMap(loc,id) {\n" +
         "         fun(this);\n"+
+        "         if(loc=='India'){ \n" +
+                "document.getElementById(id).style.height='0px';\n" +
+                "return;}\n"+
         "         var geocoder =  new google.maps.Geocoder();\n" +
         "         geocoder.geocode( { 'address': loc+', India'}, function(results, status) {\n" +
         "             if (status == google.maps.GeocoderStatus.OK) {\n" +

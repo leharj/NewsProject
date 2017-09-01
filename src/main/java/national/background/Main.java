@@ -5,7 +5,9 @@ import Utilities.FetchArticles;
 import Utilities.FetchRssFeeds;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import static constants.Constants.stopWordsSet;
@@ -45,6 +47,9 @@ public class Main {
         public void run() {
             while(true){
                 try {
+                    File file = new File("trendsNational.txt");
+                    if(file.exists())
+                        file.delete();
                     fetchNews();
                     Runtime rut = Runtime.getRuntime();
                     Process p = rut.exec(new String[]{"Rscript", "national.r"});
@@ -78,14 +83,12 @@ public class Main {
         String trend;
         while((trend=reader.readLine())!=null) {
             String words[] = trend.split(" ");
-            if(words.length==1){
-                if(isStopWord(trend)||isVerb(trend));
-                else if(isInteger(trend));
+            if (words.length == 1) {
+                if (isStopWord(trend) || isVerb(trend)) ;
                 else trendSet.add(trend);
-            }
-            else if(words.length==2)
+            } else if (words.length == 2)
                 doubleWordSet.add(trend);
-            else if(words.length==3)
+            else if (words.length == 3)
                 tripleWordSet.add(trend);
             else quadWordSet.add(trend);
         }
@@ -101,7 +104,6 @@ public class Main {
             String s1 = words[0]+" "+words[1]+" "+words[2];
             String s2 = words[1]+" "+words[2]+" "+words[3];
             if(isStopWord(words[0])||isVerb(words[0])||isStopWord(words[3])||isVerb(words[3]));
-            else if(isInteger(words[0])||isInteger(words[1])||isInteger(words[2])||isInteger(words[3]));
             else if(tripleWordSet.contains(s1)&&tripleWordSet.contains(s2)){
                 temp1.add(s1);
                 temp1.add(s2);
@@ -116,7 +118,6 @@ public class Main {
             String s1 = words[0]+" "+words[1];
             String s2 = words[1]+" "+words[2];
             if(isStopWord(words[0])||isVerb(words[0])||isStopWord(words[2])||isVerb(words[2]));
-            else if(isInteger(words[0])||isInteger(words[1])||isInteger(words[2]));
             else if(doubleWordSet.contains(s1)&&doubleWordSet.contains(s2)){
                 temp2.add(s1);
                 temp2.add(s2);
@@ -138,7 +139,6 @@ public class Main {
         for(String s:doubleWordSet){
             String words[] = s.split(" ");
             if(isStopWord(words[0])||isVerb(words[0])||isStopWord(words[1])||isVerb(words[1]));
-            else if(isInteger(words[0])||isInteger(words[1]));
             else trendSet.add(s);
         }
 
@@ -149,6 +149,10 @@ public class Main {
         trendSet.remove("minister");
         trendSet.remove("live updates");
         trendSet.remove("government");
+        trendSet.remove("social media");
+        trendSet.remove("decision");
+        trendSet.remove("high court");
+        trendSet.remove("pradesh");
 
         DatabaseHandler.writeToNational(trendSet);
     }
@@ -159,15 +163,6 @@ public class Main {
 
     private boolean isVerb(String word){
         return verbSet.contains(word);
-    }
-
-    private boolean isInteger(String s){
-        try{
-            int i = Integer.parseInt(s);
-        }catch (NumberFormatException e){
-            return  false;
-        }
-        return true;
     }
 
 }

@@ -20,7 +20,7 @@ public class FetchNews {
     ArrayList<Integer>chartParams;
 
     public FetchNews(){
-        String loc[] = { "Andaman and Nicobar","Andaman","Nicobar","Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chandigarh","Chhattisgarh","Dadra and Nagar Haveli","Daman and Diu","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jammu","Kashmir","Jharkhand","Karnataka","Kerala","Lakshadweep","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Puducherry","Pondicherry", "Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Mumbai","Delhi","Chennai","Bangalore","Hyderabad","Ahmedabad","Kolkata","Surat","Pune","Jaipur","Cochin","Lucknow","Kanpur","Nagpur","Indore","Thane","Bhopal","Visakhapatnam","Patna","Vadodara","Ghaziabad","Ludhiana","Agra","Nashik","Faridabad","Meerut","Rajkot","Solapur","Varanasi","Srinagar","Aurangabad","Dhanbad","Amritsar", "Navi Mumbai","Bengaluru","Gurugram","Gurgaon","Noida","Shimla","Gorakhpur"};
+        String loc[] = { "andaman and nicobar","andaman","nicobar","andhra pradesh","arunachal pradesh","assam","bihar","chandigarh","chhattisgarh","dadra and nagar haveli","daman and diu","goa","gujarat","haryana","himachal pradesh","jammu and kashmir","jammu","kashmir","jharkhand","karnataka","kerala","lakshadweep","madhya pradesh","maharashtra","manipur","meghalaya","mizoram","nagaland","odisha","puducherry","pondicherry", "punjab","rajasthan","sikkim","tamil nadu","telangana","tripura","uttar pradesh","uttarakhand","west bengal","mumbai","delhi","chennai","bangalore","hyderabad","ahmedabad","kolkata","surat","pune","jaipur","cochin","lucknow","kanpur","nagpur","indore","bhopal","visakhapatnam","patna","vadodara","ghaziabad","ludhiana","agra","nasik","faridabad","meerut","rajkot","solapur","varanasi","srinagar","aurangabad","dhanbad","amritsar", "bengaluru","gurugram","gurgaon","noida","shimla","gorakhpur","darjeeling"};
         locationSet = new HashSet<>(Arrays.asList(loc));
         chartParams = new ArrayList<>();
     }
@@ -98,51 +98,6 @@ public class FetchNews {
             }
         }
 
-        HashSet<String> oneNews = new HashSet<>();
-
-        for(String s:map.keySet()){
-            if(map.get(s).size()==1)
-                oneNews.add(s);
-        }
-
-        HashMap<String,List<String>> addOns  = new HashMap<>();
-
-        for(String s:oneNews){
-            List<String> list = new ArrayList<>(map.keySet());
-            Iterator<String> iterator = list.iterator();
-
-            while(iterator.hasNext()){
-                String t = iterator.next();
-                List<String> intersections = completeIntersection(s,t);
-                if(intersections!=null){
-                    try {
-                        String newAdd = map.get(s).get(0);
-                        ArrayList<String> titles = map.get(t);
-                        titles.add(newAdd);
-                        map.put(t, titles);
-                        map.remove(s);
-                        if (addOns.get(t) == null)
-                            addOns.put(t, intersections);
-                        else {
-                            List<String> additions = addOns.get(t);
-                            additions.addAll(intersections);
-                            addOns.put(t, additions);
-                        }
-                        iterator.remove();
-                    }catch (Exception e){}
-                }
-            }
-        }
-
-        for(String s:addOns.keySet()){
-            List<String> additions = addOns.get(s);
-            ArrayList<String> list = map.get(s);
-            map.remove(s);
-            for(String addition:additions)
-                s = s+", "+addition;
-            map.put(s,list);
-        }
-
         List<Map.Entry<String,ArrayList<String>>> list = new LinkedList<>(map.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<String, ArrayList<String>>>() {
             @Override
@@ -166,21 +121,46 @@ public class FetchNews {
             }
         });
 
-        for(int i=0;i<(Math.min(15,singleList.size()));i++)
-            list.add(singleList.get(i));
+        ArrayList<String> list1 = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            String[] words = list.get(i).getKey().split(", ");
+            Reducer reducer[] = new Reducer[words.length];
+            for(int j=0;j<reducer.length;j++)
+                reducer[j] = new Reducer(words[j]);
+            for(int j=0;j<reducer.length-1;j++){
+                if(reducer[j].flag){
+                    for(int k=j+1;k<reducer.length;k++){
+                        similar(reducer[j],reducer[k]);
+                    }
+                }
+            }
+            String s = "";
+            for(int j=0;j<words.length;j++) {
+                if (reducer[j].flag) {
+                    s = s+words[j]+", ";
+                }
+            }
+            s = s.substring(0,s.length()-2);
+            list1.add(s);
+        }
 
         List<Map.Entry<String, NewsDisplay>> displayList = new LinkedList<>();
 
         for(int i=0;i<list.size();i++){
-            displayList.add(new NewsEntry(list.get(i).getKey(),list.get(i).getValue()));
+            displayList.add(new NewsEntry(list1.get(i),list.get(i).getValue()));
             String parts[] = list.get(i).getKey().split(", ");
             HashSet<Article> articleSet = new HashSet<>();
             HashSet<String> titleSet = new HashSet<>();
             HashMap<String,Integer> locationTracker = new HashMap<>();
             for(Article article:articles){
                 boolean x = true;
-                for(String part:parts)
-                    x = x && article.getContent().toLowerCase().contains(part);
+                for(String part:parts) {
+                    String words[] = part.split(" ");
+                    String temp = part;
+                    if(words.length>=2)
+                        temp = words[0]+" "+words[1];
+                    x = x && article.getContent().toLowerCase().contains(temp);
+                }
                 if(x) {
                     displayList.get(i).getValue().add(article.getTitle());
                     articleSet.add(article);
@@ -214,7 +194,6 @@ public class FetchNews {
                             locationTracker.put(location, locationTracker.get(location) + count);
                     }
                 }
-                //System.out.println(count+" "+location);
             }
             String loc = "India";
             int max = 0;
@@ -256,13 +235,15 @@ public class FetchNews {
         for(String word:bList) {
             if (aList.contains(word)) {
                 weight = weight + (weights.get(word) == null ? 0.0 : weights.get(word));
-                i++;
+                if(!stopWordsSet.contains(word))
+                    i++;
             }
         }
+        if(weight>=0.5) return true;
         if(bList.size()<=2&&i==bList.size())
-            if(weight>0.05) return true;
+            return weight>0.05;
         else if(i>=2)
-            if(weight>0.05) return true;
+             return weight>0.05;
         return false;
     }
 
@@ -285,7 +266,11 @@ public class FetchNews {
         String str;
         String location = mapEntry.getValue().getLocation();
         str = "<button class = \"accordion\" onClick=\"initMap.call(this,'"+location+"','map"+(i+1)+"')\"><p class=\"alignleft\"><em>"
-                + mapEntry.getKey() + "</em></p>" + "<p class = \" alignright \">" + location + "</p></button>\n"
+                + mapEntry.getKey() + "</em></p>";
+        if(!location.equals("India"))
+            str = str+"<p class = \" alignright \">" + location + "</p>";
+
+        str = str + "</button>\n"
                 + "<div class=\"panel\">\n"
                 + "<ul class=\"list-group\">\n";
 
@@ -303,6 +288,32 @@ public class FetchNews {
 
     public ArrayList<Integer> getChartParams(){
         return chartParams;
+    }
+
+    private boolean isLocation(String loc){
+        return locationSet.contains(loc);
+    }
+
+    private void similar(Reducer a,Reducer b){
+        int count = 0;
+        List<String> aList = Arrays.asList(a.trend.split(" "));
+        List<String> bList = Arrays.asList(b.trend.split(" "));
+        for(String word:aList){
+            if(!stopWordsSet.contains(word)&&bList.contains(word))
+                count++;
+        }
+        if(count>=2) b.flag = false;
+    }
+
+    class Reducer{
+        String trend;
+        int n;
+        boolean flag;
+        Reducer(String x){
+            trend = x;
+            n = trend.split(" ").length;
+            flag = true;
+        }
     }
 
 }
