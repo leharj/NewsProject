@@ -1,4 +1,4 @@
-#Trending News Project
+# Trending News Project #
 
 This is a project that will display current trending topics.
 There are 3 end points for the localhost
@@ -13,7 +13,7 @@ There are 3 end points for the localhost
 	1.	5:- Entertainment
 	1.	6:- Sports
 
-##Setup
+## Setup ##
 
 Make a file PersonalConstants.java in constants package and have following constants.
 *	DBNAME - Name of the database
