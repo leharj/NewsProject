@@ -40,11 +40,6 @@ public class WebFlow {
     private String getPage(int i){
         String s = getTopHtml(i);
         StringBuilder sb = new StringBuilder(s);
-        try {
-            new FetchRssFeeds().fetchRSS(i);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
         try {
             sb.append(new FetchTrends().getTrends(i));

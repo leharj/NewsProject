@@ -11,6 +11,8 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static constants.Constants.table;
+
 public class FetchRssFeeds {
 
     Vector<String> vector;
@@ -24,12 +26,11 @@ public class FetchRssFeeds {
         fetchAllRSS(i,"news.txt");
     }
 
-    public Vector<String> fetchAllRSS(int i,String file) throws Exception{
+    public void fetchAllRSS(int i,String file) throws Exception{
         int k = i;
         if(i==7) k =1;
         ArrayList<String> links = new ArrayList<String>();
         mapAllLinks(links,k);
-        System.out.println("lkj");
         ExecutorService executor = Executors.newFixedThreadPool(8);
         for(String link:links){
             Runnable worker = new WorkerThread(link,vector);
@@ -44,12 +45,9 @@ public class FetchRssFeeds {
             writer.write("\n");
         }
         writer.close();
-        if(i==7) return vector;
-        return null;
     }
 
     public void fetchRSS(int i) throws Exception{
-        String table[] = {"general","political","world","business","technology","entertainment","sports"};
         ArrayList<String> links = new ArrayList<String>();
         mapLinks(links,i);
         ExecutorService executor = Executors.newFixedThreadPool(8);

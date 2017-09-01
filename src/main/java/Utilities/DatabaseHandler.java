@@ -101,6 +101,16 @@ public class DatabaseHandler {
         con.close();
     }
 
+    public static HashSet<String> getNationalTrends() throws Exception{
+        connectDb();
+        HashSet<String> trendSet = new HashSet<>();
+        Statement statement = con.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM national");
+        while(rs.next())
+            trendSet.add(rs.getString(1));
+        return trendSet;
+    }
+
     public synchronized static void writeArticle(Article article) throws Exception{
         connectDb();
         Statement statement = con.createStatement();

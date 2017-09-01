@@ -21,7 +21,6 @@ public class FetchArticles {
         }
         executor.shutdown();
         while(!executor.isTerminated());
-        System.out.println("lkj");
     }
 
     private void getMainLinks(){

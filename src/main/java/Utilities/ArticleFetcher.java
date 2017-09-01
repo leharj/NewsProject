@@ -37,7 +37,7 @@ public class ArticleFetcher implements Runnable {
                 try {
                     date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").parse(dateList.item(i).getTextContent());
                 }catch (Exception e){
-                    System.out.println(i+" "+link);
+                    e.printStackTrace();
                 }
                 String articleLink = linkList.item(i).getTextContent();
                 Runnable storing = new ArticleReader(title,date,articleLink);
