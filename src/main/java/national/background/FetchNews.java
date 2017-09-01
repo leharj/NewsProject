@@ -175,6 +175,7 @@ public class FetchNews {
             displayList.add(new NewsEntry(list.get(i).getKey(),list.get(i).getValue()));
             String parts[] = list.get(i).getKey().split(", ");
             HashSet<Article> articleSet = new HashSet<>();
+            HashSet<String> titleSet = new HashSet<>();
             HashMap<String,Integer> locationTracker = new HashMap<>();
             for(Article article:articles){
                 boolean x = true;
@@ -186,20 +187,34 @@ public class FetchNews {
                     displayList.get(i).getValue().incrementTime(article.getDate());
                 }
             }
-            for(Article article:articleSet){
-                for(String location:locationSet){
-                    int count = 0;
-                    Pattern pattern = Pattern.compile(location,Pattern.CASE_INSENSITIVE);
+            titleSet = new HashSet<>(list.get(i).getValue());
+            for(String location:locationSet){
+                int count = 0;
+                for(Article article:articleSet) {
+                    Pattern pattern = Pattern.compile(location, Pattern.CASE_INSENSITIVE);
                     Matcher m = pattern.matcher(article.getContent());
-                    while(m.find())
+                    while (m.find())
                         count++;
-                    if(count>0){
-                        if(locationTracker.get(location)==null)
-                            locationTracker.put(location,count);
+                    if (count > 0) {
+                        if (locationTracker.get(location) == null)
+                            locationTracker.put(location, count);
                         else
-                            locationTracker.put(location,locationTracker.get(location)+count);
+                            locationTracker.put(location, locationTracker.get(location) + count);
                     }
                 }
+                for(String title :titleSet) {
+                    Pattern pattern = Pattern.compile(location, Pattern.CASE_INSENSITIVE);
+                    Matcher m = pattern.matcher(title);
+                    while (m.find())
+                        count++;
+                    if (count > 0) {
+                        if (locationTracker.get(location) == null)
+                            locationTracker.put(location, count);
+                        else
+                            locationTracker.put(location, locationTracker.get(location) + count);
+                    }
+                }
+                //System.out.println(count+" "+location);
             }
             String loc = "India";
             int max = 0;
