@@ -7,14 +7,20 @@ public class NewsDisplay {
     String location;
     ArrayList<String> relatedNews;
     int times[];
+    boolean flag;
 
     public NewsDisplay(ArrayList<String> news){
         relatedNews = news;
         times = new int[8];
+        flag = true;
     }
 
     public void add(String title){
         relatedNews.add(title);
+    }
+
+    public void addAll(ArrayList<String> titles){
+        relatedNews.addAll(titles);
     }
 
     public String getLocation() {
@@ -41,5 +47,13 @@ public class NewsDisplay {
 
     public ArrayList<String> getRelatedNews() {
         return relatedNews;
+    }
+
+    public void changeFlag(){
+        flag = false;
+    }
+
+    public boolean getFlag(){
+        return flag;
     }
 }

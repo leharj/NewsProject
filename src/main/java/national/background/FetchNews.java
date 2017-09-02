@@ -150,7 +150,6 @@ public class FetchNews {
             displayList.add(new NewsEntry(list1.get(i),list.get(i).getValue()));
             String parts[] = list.get(i).getKey().split(", ");
             HashSet<Article> articleSet = new HashSet<>();
-            HashSet<String> titleSet = new HashSet<>();
             HashMap<String,Integer> locationTracker = new HashMap<>();
             for(Article article:articles){
                 boolean x = true;
@@ -167,34 +166,16 @@ public class FetchNews {
                     displayList.get(i).getValue().incrementTime(article.getDate());
                 }
             }
-            titleSet = new HashSet<>(list.get(i).getValue());
+            HashSet<String> titleSet = new HashSet<>(list.get(i).getValue());
+
             for(String location:locationSet){
-                int count = 0;
-                for(Article article:articleSet) {
-                    Pattern pattern = Pattern.compile(location, Pattern.CASE_INSENSITIVE);
-                    Matcher m = pattern.matcher(article.getContent());
-                    while (m.find())
-                        count++;
-                    if (count > 0) {
-                        if (locationTracker.get(location) == null)
-                            locationTracker.put(location, count);
-                        else
-                            locationTracker.put(location, locationTracker.get(location) + count);
-                    }
-                }
-                for(String title :titleSet) {
-                    Pattern pattern = Pattern.compile(location, Pattern.CASE_INSENSITIVE);
-                    Matcher m = pattern.matcher(title);
-                    while (m.find())
-                        count++;
-                    if (count > 0) {
-                        if (locationTracker.get(location) == null)
-                            locationTracker.put(location, count);
-                        else
-                            locationTracker.put(location, locationTracker.get(location) + count);
-                    }
-                }
+                for(Article article:articleSet)
+                    locationFinder(location,article.getContent(),locationTracker);
+
+                for(String title :titleSet)
+                    locationFinder(location,title,locationTracker);
             }
+
             String loc = "India";
             int max = 0;
             for(String location:locationTracker.keySet()){
@@ -203,13 +184,34 @@ public class FetchNews {
                     loc = location;
                 }
             }
-            displayList.get(i).getValue().setLocation(loc);
+            if(max>16||max>2*articleSet.size())
+                displayList.get(i).getValue().setLocation(loc);
+            else displayList.get(i).getValue().setLocation("India");
             chartParams.addAll(displayList.get(i).getValue().getTimes());
+        }
+
+        for(int i=0;i<displayList.size()-1;i++){
+            if(displayList.get(i).getValue().getFlag()) {
+                for (int j = i + 1; j < displayList.size(); j++) {
+                    int temp = completeIntersection(displayList, i, j);
+                    if (temp != -1) {
+                        displayList.get(temp).getValue().changeFlag();
+                        displayList.get(i+j-temp).getValue().addAll(displayList.get(temp).getValue().getRelatedNews());
+                    }
+                }
+            }
+        }
+
+        Iterator<Map.Entry<String,NewsDisplay>> itr = displayList.iterator();
+        while(itr.hasNext()){
+            Map.Entry<String,NewsDisplay> entry = itr.next();
+            if(!entry.getValue().getFlag())
+                itr.remove();
         }
 
         StringBuilder sb = new StringBuilder("<div class=\"container col-md-6\">\n");
 
-        int size = list.size();
+        int size = displayList.size();
 
         for(int i=0;i<(size+1)/2;i++)
             listBuilder(sb,displayList.get(2*i),2*i);
@@ -223,6 +225,30 @@ public class FetchNews {
 
         sb.append("</div>\n");
         return sb.toString();
+    }
+
+    private int completeIntersection(List<Map.Entry<String,NewsDisplay>> list,int i,int j){
+        List<String> alist = Arrays.asList(list.get(i).getKey().split(", "));
+        List<String> blist = Arrays.asList(list.get(j).getKey().split(", "));
+        int temp = -1;
+        if(alist.size()>blist.size()) temp = j;
+        else if(blist.size()>alist.size()) temp = i;
+        else return temp;
+        List<String> bigger;
+        List<String> smaller;
+        if(temp==i){
+            bigger = blist;
+            smaller = alist;
+        }
+        else{
+            bigger = alist;
+            smaller = blist;
+        }
+        boolean x = true;
+        for(String str:smaller)
+            x = x&&bigger.contains(str);
+        if(x) return temp;
+        return -1;
     }
 
     private boolean intersects(String a,String b){
@@ -247,20 +273,19 @@ public class FetchNews {
         return false;
     }
 
-    private List<String> completeIntersection(String a,String b){
-        boolean x = true;
-        if(a.equals(b)) return null;
-        List<String> aList = Arrays.asList(a.split(", "));
-        List<String> bList = Arrays.asList(b.split(", "));
-        Set<String> aSet = new HashSet<>(aList);
-        for(String trend:bList) {
-            x = x && aSet.contains(trend);
-            if(x) aSet.remove(trend);
+    private void locationFinder(String location,String text,HashMap<String,Integer> locationTracker){
+        int count = 0;
+        Pattern pattern = Pattern.compile(location, Pattern.CASE_INSENSITIVE);
+        Matcher m = pattern.matcher(text);
+        while (m.find())
+            count++;
+        if (count > 0) {
+            if (locationTracker.get(location) == null)
+                locationTracker.put(location, count);
+            else
+                locationTracker.put(location, locationTracker.get(location) + count);
         }
-        if(x) return new ArrayList<>(aSet);
-        return null;
     }
-
 
     private void listBuilder(StringBuilder sb,Map.Entry<String,NewsDisplay> mapEntry,int i) {
         String str;
@@ -290,10 +315,6 @@ public class FetchNews {
         return chartParams;
     }
 
-    private boolean isLocation(String loc){
-        return locationSet.contains(loc);
-    }
-
     private void similar(Reducer a,Reducer b){
         int count = 0;
         List<String> aList = Arrays.asList(a.trend.split(" "));
@@ -315,5 +336,4 @@ public class FetchNews {
             flag = true;
         }
     }
-
 }

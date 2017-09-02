@@ -19,6 +19,12 @@ Make a file PersonalConstants.java in constants package and have following const
 *	DBNAME - Name of the database
 *	DBUSER - Username of MySQL
 *	DBPASS - Password of MySQL
-*	GOOGLE_API_KEY - API Key for Google Maps
 
 Before using for the first time initialize the database by using file database_init.sql
+
+## How to Execute ##
+
+Once the setup is done the program can be executed by running the following 3 classes- 
+*	Main - In package trends.background
+*	Main - In package national.background
+*	WebFlow - In package foreground
