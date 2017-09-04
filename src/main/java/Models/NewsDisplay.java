@@ -16,11 +16,18 @@ public class NewsDisplay {
     }
 
     public void add(String title){
+        if(relatedNews.size()<=14)
         relatedNews.add(title);
     }
 
     public void addAll(ArrayList<String> titles){
-        relatedNews.addAll(titles);
+        int size = relatedNews.size();
+        int i = 0;
+        while(size<15&&i<titles.size()) {
+            relatedNews.add(titles.get(i));
+            i++;
+            size++;
+        }
     }
 
     public String getLocation() {

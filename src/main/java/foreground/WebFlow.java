@@ -6,6 +6,7 @@ import trends.background.FetchTrends;
 
 import java.util.ArrayList;
 
+import static constants.PersonalConstants.GOOGLE_API_KEY;
 import static spark.Spark.get;
 
 public class WebFlow {
@@ -178,7 +179,7 @@ public class WebFlow {
             sb.append("myfunction(\"chartContainer"+(i+1)+"\","+chartParams.get(8*i+7)+","+chartParams.get(8*i+6)+","+chartParams.get(8*i+5)+","+chartParams.get(8*i+4)+","+chartParams.get(8*i+3)+","+chartParams.get(8*i+2)+","+chartParams.get(8*i+1)+","+chartParams.get(8*i)+")\n");
         }
         sb.append("</script>\n");
-        sb.append("<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?sensor=false\"></script>\n");
+        sb.append("<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?key="+GOOGLE_API_KEY+"&sensor=false\"></script>\n");
         sb.append("<script>\n");
         String s = "var x;\nvar y;\n      function initMap(loc,id) {\n" +
         "         fun(this);\n"+
