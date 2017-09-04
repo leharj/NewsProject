@@ -5,7 +5,6 @@ There are 3 end points for the localhost
 1.	The home page gives details of the national news, how frequent are the trends pattern of the trends and the centre of focus of the trend.
 1.	The /national page is same as home page.
 1.	The news/{id} page - The page gives info about trending topics across various categories. Various ids are - 
-	1.	0:- General
 	1.	1:- National
 	1.	2:- World
 	1.	3:- Business
