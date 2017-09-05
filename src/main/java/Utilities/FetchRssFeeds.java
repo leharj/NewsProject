@@ -78,16 +78,6 @@ public class FetchRssFeeds {
         String et = "http://economictimes.indiatimes.com/";
         String cnbc = "https://www.cnbc.com/id/";
         switch (i){
-            case 0:
-                toi = toi+"topstories.cms";
-                hindu = hindu+"?service=rss";
-                ht = ht+"topnews/rssfeed.xml";
-                indiaToday = indiaToday+"30";
-                google= google+"/headlines?ned=in&hl=en-IN";
-                deccan = deccan+"top-stories.rss";
-                dailyBhaskar = dailyBhaskar+"news";
-                links.addAll(Arrays.asList(new String[]{toi,google, hindu, ht, indiaToday, deccan, dailyBhaskar}));
-                break;
             case 1:
                 toi = toi+"/-2128936835.cms";
                 sify = sify+"national";
@@ -204,12 +194,6 @@ public class FetchRssFeeds {
         String rediff = "http://www.rediff.com/rss/";
         String allIndia = "http://www.allindianewspapers.com/Feeds/";
         switch (i){
-            case 0:
-                String rediff1 = rediff+"inrss.xml";
-                rediff = rediff+"newsrss.xml";
-                allIndia = allIndia+"homepage.xml";
-                links.addAll(Arrays.asList(new String[]{rediff1,rediff,allIndia}));
-                break;
             case 1:
                 allIndia = allIndia+"nation.xml";
                 links.add(allIndia);

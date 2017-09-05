@@ -22,7 +22,7 @@ public class Main {
         @Override
         public void run() {
             while (true) {
-                for (int i = 0; i < 7; i++) {
+                for (int i = 1; i < 7; i++) {
                     try {
                         File f = new File("trends.txt");
                         if (f.exists()) f.delete();
